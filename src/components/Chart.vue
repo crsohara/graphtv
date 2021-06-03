@@ -25,11 +25,30 @@ export default {
         xAxis: {
           type: 'category'
         },
+        tooltip: {
+          formatter: function() {
+            return `
+              ${this.point.name}<br/>
+              ${this.point.label}
+            `
+          },
+          snap: 0,
+          style: {
+            pointerEvents: 'auto'
+          }
+        },
         plotOptions: {
           series: {
             label: {
                 connectorAllowed: false
             },
+            point: {
+              events: {
+                click: function() {
+                  this.series.chart.tooltip.options.stickOnContact = !this.series.chart.tooltip.options.stickOnContact
+                }
+              }
+            }
           }
         },
       }
