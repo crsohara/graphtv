@@ -1,5 +1,5 @@
 class QueryService {
-  baseUrl = 'http://www.omdbapi.com/?apikey=d0d85a24&'
+  baseUrl = 'https://www.omdbapi.com/?apikey=d0d85a24&'
 
   constructor() {
   }
