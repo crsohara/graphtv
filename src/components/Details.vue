@@ -7,13 +7,13 @@
       <h2>{{ series.Title }}</h2>
       <div>{{ series.Year }} ({{ series.totalSeasons }} Seasons) </div>
       <div>{{ series.Plot }}</div>
-      <div>IMDB Rating: {{ series.imdbRating }}</div>
+      <div><strong>IMDB Rating:</strong> {{ series.imdbRating }}</div>
       <a
         v-if="series.imdbID"
         :href="`https://www.imdb.com/title/${series.imdbID}`"
         target="_blank"
       >
-        imdb
+        IMDB Series
       </a>
     </div>
   </div>

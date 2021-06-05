@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <div class="search">
     <div>
       <input
         type="search"
@@ -23,7 +23,7 @@
     <div class="error" v-if="error">
       Error: {{ error }}
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style scoped>
-  header {
+  .search {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;

@@ -10,14 +10,25 @@
       @clearResults="clearResults"
     />
 
-    <Details
-      :series="series"
-    />
+    <div class="flex">
+      <div class="column">
+        <Details
+          :series="series"
+        />
+      </div>
+
+      <div class="column">
+        <Episode-detail
+          :episodeID="episode"
+        />
+      </div>
+    </div>
 
     <Loading v-if="loading" />
     <Chart
       :title="`${series.Title} (${series.Year})`"
       :series="chartData"
+      @clickEpisode="setEpisode"
     />
   </div>
 </template>
@@ -28,6 +39,7 @@ import Details from './components/Details.vue'
 import Chart from './components/Chart.vue'
 import Loading from './components/Loading.vue'
 import ResultList from './components/ResultList.vue'
+import EpisodeDetail from './components/EpisodeDetail.vue'
 
 export default {
   name: 'App',
@@ -36,17 +48,23 @@ export default {
     Details,
     Chart,
     Loading,
-    ResultList
+    ResultList,
+    EpisodeDetail
   },
   data() {
     return {
       loading: false,
       chartData: [],
       results: [],
-      series: {}
+      seasons: [],
+      series: {},
+      episode: ''
     }
   },
   methods: {
+    setEpisode(episodeID) {
+      this.episode = episodeID
+    },
     clearResults() {
       this.results = []
     },
@@ -63,12 +81,12 @@ export default {
       return `
         ${item.Title}<br/>
         <b>Rating</b>: ${item.imdbRating}<br/>
-        <a href="https://www.imdb.com/title/${item.imdbID}" target="_blank">imdb</a>
       `
     },
     async getSeries(imdbID) {
       this.results = []
       this.chartData = []
+      this.episode = ''
       this.loading = true
       this.pushUrlParams([`id=${imdbID}`])
       this.series = await this.$query.getSeries(imdbID)
@@ -82,16 +100,16 @@ export default {
       this.getSeasons(imdbID, this.series.totalSeasons)
     },
     async getSeasons(id, seasonCount) {
-      const seasons = [...Array(parseInt(seasonCount) + 1).keys()]
-      seasons.splice(0,1)
-      const seasonData = await Promise.all(seasons.map(season => {
+      const seasonNumbers = [...Array(parseInt(seasonCount) + 1).keys()]
+      seasonNumbers.splice(0,1)
+      this.seasons = await Promise.all(seasonNumbers.map(season => {
         return this.$query.getSeason(id, season)
       })).then((results) => {
         this.loading = false
         return results
       })
 
-      this.setChartData(seasonData)
+      this.setChartData(this.seasons)
     },
     setChartData(data) {
       this.chartData = data.map(item => {
@@ -102,7 +120,8 @@ export default {
           return {
             name: this.formatPointName(item, episode),
             label: this.formatPointLabel(episode),
-            y: parseFloat(episode.imdbRating)
+            y: parseFloat(episode.imdbRating),
+            id: episode.imdbID
           }
         })
         return {
@@ -131,7 +150,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .wrap {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -143,4 +162,72 @@ export default {
 a {
   text-decoration: underline;
 }
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (min-width: 768px) {
+  .flex {
+    flex-direction: row;
+  }
+}
+.column + .column {
+  margin-top: 1rem;
+}
+@media screen and (min-width: 768px) {
+  .column + .column {
+    margin-top: 0;
+    margin-left: 1rem;
+  }
+}
+/*
+https://jsfiddle.net/highcharts/vstf68b3/
+:root {
+	--background-color: #ffffff;
+	--text-color: #292b2c;
+	--hilight-color: #0275d8;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #1F2227;
+        --text-color: #c0c0c0;
+        --hilight-color: #8db4d6;
+    }
+
+    .highcharts-color-0 {
+        fill: #0460ba;
+        stroke: #0460ba;
+    }
+    .highcharts-color-1 {
+        fill: #9696ab;
+        stroke: #9696ab;
+    }
+}
+
+body {
+    background-color: var(--background-color);
+}
+.highcharts-background {
+    fill: var(--background-color);
+}
+.highcharts-container text {
+    fill: var(--text-color);
+}
+.highcharts-subtitle,
+.highcharts-credits,
+.highcharts-axis-title {
+    fill-opacity: 0.7;
+}
+.highcharts-grid-line {
+    stroke: var(--text-color);
+    stroke-opacity: 0.2;
+}
+.highcharts-tooltip-box {
+    fill: var(--background-color);
+}
+.highcharts-column-series rect.highcharts-point {
+    stroke: var(--background-color);
+} */
+
 </style>

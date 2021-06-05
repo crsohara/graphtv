@@ -39,10 +39,16 @@ export default {
           text: this.title
         },
         xAxis: {
-          type: 'category'
+          type: 'category',
+          title: {
+            text: 'Episode'
+          }
         },
         yAxis: {
-          max: 10
+          max: 10,
+          title: {
+            text: 'Rating'
+          }
         },
         tooltip: {
           formatter: function() {
@@ -52,9 +58,6 @@ export default {
             `
           },
           snap: 0,
-          style: {
-            pointerEvents: 'auto'
-          }
         },
         plotOptions: {
           series: {
@@ -63,8 +66,8 @@ export default {
             },
             point: {
               events: {
-                click: function() {
-                  this.series.chart.tooltip.options.stickOnContact = !this.series.chart.tooltip.options.stickOnContact
+                click: (event) => {
+                  this.$emit('clickEpisode', event.point.options.id)
                 }
               }
             }
@@ -83,3 +86,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.highcharts-point {
+  cursor: pointer;
+}
+</style>
