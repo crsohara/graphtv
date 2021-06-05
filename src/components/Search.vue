@@ -51,17 +51,17 @@ export default {
         return
       }
 
-      const response = await this.$query.search(this.searchName, this.searchYear)
-      const { Search, totalResults } = response
+      const { Search, totalResults, Error } = await this.$query.search(this.searchName, this.searchYear)
 
-      if (response.Error) {
-        this.error = response.Error
+      if (Error) {
+        this.error = Error
         return
       }
 
       if (totalResults === '1') {
         this.setResult(Search[0])
       }
+
       this.$emit('setSearchResults', Search)
     },
     async setResult(item) {

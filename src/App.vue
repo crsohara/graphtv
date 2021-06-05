@@ -14,8 +14,9 @@
       :series="series"
     />
 
+    <Loading v-if="loading" />
     <Chart
-      v-if="showChart"
+      :title="`${series.Title} (${series.Year})`"
       :series="chartData"
     />
   </div>
@@ -25,6 +26,7 @@
 import Search from './components/Search.vue'
 import Details from './components/Details.vue'
 import Chart from './components/Chart.vue'
+import Loading from './components/Loading.vue'
 import ResultList from './components/ResultList.vue'
 
 export default {
@@ -33,12 +35,13 @@ export default {
     Search,
     Details,
     Chart,
+    Loading,
     ResultList
   },
   data() {
     return {
-      chartData: {},
-      showChart: false,
+      loading: false,
+      chartData: [],
       results: [],
       series: {}
     }
@@ -65,24 +68,36 @@ export default {
     },
     async getSeries(imdbID) {
       this.results = []
+      this.chartData = []
+      this.loading = true
       this.pushUrlParams([`id=${imdbID}`])
       this.series = await this.$query.getSeries(imdbID)
 
-      if (this.series.Type === 'series') {
-        this.getSeasons(imdbID, this.series.totalSeasons)
+      if (this.series.totalSeasons === 'N/A') {
+        this.loading = false
+        this.chartData = []
+        return
       }
+
+      this.getSeasons(imdbID, this.series.totalSeasons)
     },
     async getSeasons(id, seasonCount) {
       const seasons = [...Array(parseInt(seasonCount) + 1).keys()]
       seasons.splice(0,1)
       const seasonData = await Promise.all(seasons.map(season => {
         return this.$query.getSeason(id, season)
-      }))
+      })).then((results) => {
+        this.loading = false
+        return results
+      })
 
       this.setChartData(seasonData)
     },
     setChartData(data) {
       this.chartData = data.map(item => {
+        if (!item.Episodes) {
+          return {}
+        }
         const data = item.Episodes.map(episode => {
           return {
             name: this.formatPointName(item, episode),
@@ -95,8 +110,6 @@ export default {
           data
         }
       })
-
-      this.showChart = true
     },
     pushUrlParams(params) {
       history.pushState({}, null, `${location.pathname}?${params.join('&')}`);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isVisible">
     <highcharts
       class="hc"
       :options="chartOptions"
@@ -11,11 +11,17 @@
 <script>
 export default {
   props: {
-    series: [],
+    series: Array,
+    title: String
   },
   data() {
     return {
       chartOptions: {}
+    }
+  },
+  computed: {
+    isVisible() {
+      return this.series.length
     }
   },
   methods: {
@@ -29,6 +35,9 @@ export default {
     renderChart() {
       this.chartOptions = {
         series: this.series,
+        title: {
+          text: this.title
+        },
         xAxis: {
           type: 'category'
         },

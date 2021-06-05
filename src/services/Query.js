@@ -9,7 +9,14 @@ class QueryService {
   }
 
   get(query) {
-    return fetch(this.getUrl(query)).then((response) => response.json())
+    return fetch(this.getUrl(query))
+      .then((response) => response.json())
+      .then(response => {
+        if (response.Error) {
+          console.error(`Error: query:${query} - ${response.Error}`)
+        }
+        return response
+      })
   }
 
   search(searchName, searchYear = false) {
@@ -27,7 +34,9 @@ class QueryService {
   }
 
   getSeason(id, season) {
-    return this.get(`i=${id}&season=${season}`)
+    return this.get(`i=${id}&season=${season}`).catch(() => {
+      console.log('caught')
+    })
   }
 
 }
