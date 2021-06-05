@@ -13,7 +13,7 @@
         :href="`https://www.imdb.com/title/${series.imdbID}`"
         target="_blank"
       >
-        IMDB Series
+        Series IMDB
       </a>
     </div>
   </div>
@@ -43,6 +43,7 @@
     align-items: flex-start;
     margin-top: 1rem;
     margin-left: 1rem;
+    max-width: 768px;
   }
   img {
     width: 100px;

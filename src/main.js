@@ -3,6 +3,8 @@ import App from './App.vue'
 import HighchartsVue from "highcharts-vue";
 import query from '/src/services/Query'
 
+import "./assets/app.scss";
+
 Vue.use(HighchartsVue);
 
 Vue.$query = query

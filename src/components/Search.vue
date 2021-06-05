@@ -78,7 +78,7 @@ export default {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
-    align-items: flex-start
+    align-items: flex-start;
   }
   input + button,
   input + input {

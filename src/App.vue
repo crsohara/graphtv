@@ -1,5 +1,6 @@
 <template>
-  <div class="wrap">
+  <div class="app" :class="themeClass">
+    <button @click="changeTheme">Theme</button>
     <Search
       @setSearchResults="setSearchResults"
     />
@@ -58,10 +59,14 @@ export default {
       results: [],
       seasons: [],
       series: {},
-      episode: ''
+      episode: '',
+      themeClass: false
     }
   },
   methods: {
+    changeTheme(){
+      this.themeClass = this.themeClass === 'dark' ? 'light' : 'dark'
+    },
     setEpisode(episodeID) {
       this.episode = episodeID
     },
@@ -151,12 +156,14 @@ export default {
 </script>
 
 <style scoped>
-.wrap {
+.app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin-top: 60px;
+  padding-top: 60px;
+  min-height: 100%;
+  /* max-width: 1440px; */
 }
 a {
   text-decoration: underline;
@@ -183,6 +190,7 @@ a {
 <style>
 /* https://jsfiddle.net/highcharts/vstf68b3/ */
 /* @import 'https://code.highcharts.com/css/highcharts.css'; */
+:root .light,
 :root {
   --background-color: #ffffff;
   --text-color: #292b2c;
@@ -192,7 +200,24 @@ a {
   --end: white;
 }
 
-@media (prefers-color-scheme: dark) {
+:root .dark {
+  --background-color: #1F2227;
+  --text-color: #c0c0c0;
+  --hilight-color: #8db4d6;
+  --link-color: yellow;
+  --start: white;
+  --end: var(--background-color);
+}
+
+.dark .highcharts-color-0 {
+  fill: #0460ba;
+  stroke: #0460ba;
+}
+.dark .highcharts-color-1 {
+  fill: #9696ab;
+  stroke: #9696ab;
+}
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #1F2227;
     --text-color: #c0c0c0;
@@ -210,12 +235,13 @@ a {
     fill: #9696ab;
     stroke: #9696ab;
   }
-}
+} */
 
 .fountainG {
   background-color:var(--text-color);
 }
-body {
+body,
+.app {
   background-color: var(--background-color);
   color: var(--text-color);
 }

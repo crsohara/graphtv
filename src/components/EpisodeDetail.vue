@@ -9,9 +9,6 @@
       </div>
       <div class="column">
         <div class="detail">
-          <a href="`https://www.imdb.com/title/${item.imdbID}`" target="_blank">IMDB Episode</a>
-        </div>
-        <div class="detail">
           <strong>Title:</strong> {{ episode.Title }}
         </div>
         <div class="detail">
@@ -34,6 +31,9 @@
         </div>
         <div class="detail">
           <strong>Language:</strong> {{ episode.Language }}
+        </div>
+        <div class="detail">
+          <a :href="`https://www.imdb.com/title/${episode.imdbID}`" target="_blank">Episode IMDB</a>
         </div>
       </div>
     </div>
