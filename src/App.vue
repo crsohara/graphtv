@@ -156,7 +156,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
 }
 a {
@@ -180,54 +179,73 @@ a {
     margin-left: 1rem;
   }
 }
-/*
-https://jsfiddle.net/highcharts/vstf68b3/
+</style>
+<style>
+/* https://jsfiddle.net/highcharts/vstf68b3/ */
+/* @import 'https://code.highcharts.com/css/highcharts.css'; */
 :root {
-	--background-color: #ffffff;
-	--text-color: #292b2c;
-	--hilight-color: #0275d8;
+  --background-color: #ffffff;
+  --text-color: #292b2c;
+  --hilight-color: #0275d8;
+  --link-color: blue;
+  --start: var(--background-color);
+  --end: white;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background-color: #1F2227;
-        --text-color: #c0c0c0;
-        --hilight-color: #8db4d6;
-    }
+  :root {
+    --background-color: #1F2227;
+    --text-color: #c0c0c0;
+    --hilight-color: #8db4d6;
+    --link-color: yellow;
+    --start: white;
+    --end: var(--background-color);
+  }
 
-    .highcharts-color-0 {
-        fill: #0460ba;
-        stroke: #0460ba;
-    }
-    .highcharts-color-1 {
-        fill: #9696ab;
-        stroke: #9696ab;
-    }
+  .highcharts-color-0 {
+    fill: #0460ba;
+    stroke: #0460ba;
+  }
+  .highcharts-color-1 {
+    fill: #9696ab;
+    stroke: #9696ab;
+  }
 }
 
+.fountainG {
+  background-color:var(--text-color);
+}
 body {
-    background-color: var(--background-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+text {
+  color: var(--text-color) !important;
+  fill: var(--text-color) !important;
 }
 .highcharts-background {
-    fill: var(--background-color);
+  fill: var(--background-color);
 }
 .highcharts-container text {
-    fill: var(--text-color);
+  fill: var(--text-color);
 }
 .highcharts-subtitle,
 .highcharts-credits,
 .highcharts-axis-title {
-    fill-opacity: 0.7;
+  fill-opacity: 0.7;
 }
 .highcharts-grid-line {
-    stroke: var(--text-color);
-    stroke-opacity: 0.2;
+  stroke: var(--text-color);
+  stroke-opacity: 0.2;
 }
 .highcharts-tooltip-box {
-    fill: var(--background-color);
+  fill: var(--background-color);
 }
 .highcharts-column-series rect.highcharts-point {
-    stroke: var(--background-color);
-} */
+  stroke: var(--background-color);
+}
+a {
+  color: var(--link-color);
+}
 
 </style>
