@@ -1,7 +1,7 @@
 <template>
-  <div style="display:flex; text-align: left; align-items: flex-start; margin-left: 1rem;">
+  <div class="details">
     <div>
-      <img :src="series.Poster" style="width: 100px; margin-right: 1rem;">
+      <img :src="series.Poster">
     </div>
     <div v-if="seriesIsSet">
       <h2>{{ series.Title }}</h2>
@@ -35,3 +35,17 @@
     }
   }
 </script>
+
+<style scoped>
+  .details {
+    display:flex;
+    text-align: left;
+    align-items: flex-start;
+    margin-top: 1rem;
+    margin-left: 1rem;
+  }
+  img {
+    width: 100px;
+    margin-right: 1rem;
+  }
+</style>

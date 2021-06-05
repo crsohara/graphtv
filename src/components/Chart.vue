@@ -19,11 +19,21 @@ export default {
     }
   },
   methods: {
+    formatPointLabel(item) {
+      return `
+        ${item.Title}<br/>
+        <b>Rating</b>: ${item.imdbRating}<br/>
+        <a href="https://www.imdb.com/title/${item.imdbID}" target="_blank">imdb</a>
+      `
+    },
     renderChart() {
       this.chartOptions = {
         series: this.series,
         xAxis: {
           type: 'category'
+        },
+        yAxis: {
+          max: 10
         },
         tooltip: {
           formatter: function() {
@@ -55,7 +65,7 @@ export default {
     }
   },
   mounted() {
-      this.renderChart()
+    this.renderChart()
   },
   watch: {
     series() {

@@ -12,21 +12,22 @@ class QueryService {
     return fetch(this.getUrl(query)).then((response) => response.json())
   }
 
-  search(searchval) {
-    return this.get(`type=series&s=${searchval}`)
+  search(searchName, searchYear = false) {
+    let params = [`s=${searchName}`]
+
+    if (searchYear) {
+      params.push(`y=${searchYear}`)
+    }
+
+    return this.get(`type=series&${params.join('&')}`)
   }
 
-  getById(id) {
+  getSeries(id) {
     return this.get(`i=${id}`)
   }
 
   getSeason(id, season) {
     return this.get(`i=${id}&season=${season}`)
-  }
-
-  handleErrors(err) {
-    // Note: here you may want to add your errors handling
-    console.log({ message: "Errors is handled here", err });
   }
 
 }

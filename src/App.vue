@@ -1,12 +1,17 @@
 <template>
   <div class="wrap">
     <Search
-      @dataUpdate="dataUpdate"
-      @resultUpdate="resultUpdate"
+      @setSearchResults="setSearchResults"
+    />
+
+    <ResultList
+      :results="results"
+      @getSeries="getSeries"
+      @clearResults="clearResults"
     />
 
     <Details
-      :series="result"
+      :series="series"
     />
 
     <Chart
@@ -20,27 +25,36 @@
 import Search from './components/Search.vue'
 import Details from './components/Details.vue'
 import Chart from './components/Chart.vue'
+import ResultList from './components/ResultList.vue'
 
 export default {
   name: 'App',
   components: {
     Search,
     Details,
-    Chart
+    Chart,
+    ResultList
   },
   data() {
     return {
       chartData: {},
       showChart: false,
-      result: {}
+      results: [],
+      series: {}
     }
   },
   methods: {
+    clearResults() {
+      this.results = []
+    },
+    setSearchResults(results) {
+      this.results = results
+    },
     formatNumber(item) {
       return parseInt(item) > 9 ? item : '0' + item
     },
-    formatPointName(item, episode) {
-      return `S${this.formatNumber(item.Season)}E${this.formatNumber(episode.Episode)}`
+    formatPointName({Season}, {Episode}) {
+      return `S${this.formatNumber(Season)}E${this.formatNumber(Episode)}`
     },
     formatPointLabel(item) {
       return `
@@ -49,10 +63,25 @@ export default {
         <a href="https://www.imdb.com/title/${item.imdbID}" target="_blank">imdb</a>
       `
     },
-    resultUpdate(data) {
-      this.result = data
+    async getSeries(imdbID) {
+      this.results = []
+      this.pushUrlParams([`id=${imdbID}`])
+      this.series = await this.$query.getSeries(imdbID)
+
+      if (this.series.Type === 'series') {
+        this.getSeasons(imdbID, this.series.totalSeasons)
+      }
     },
-    dataUpdate(data) {
+    async getSeasons(id, seasonCount) {
+      const seasons = [...Array(parseInt(seasonCount) + 1).keys()]
+      seasons.splice(0,1)
+      const seasonData = await Promise.all(seasons.map(season => {
+        return this.$query.getSeason(id, season)
+      }))
+
+      this.setChartData(seasonData)
+    },
+    setChartData(data) {
       this.chartData = data.map(item => {
         const data = item.Episodes.map(episode => {
           return {
@@ -61,16 +90,31 @@ export default {
             y: parseFloat(episode.imdbRating)
           }
         })
-        const result = {
+        return {
           name: `Season ${item.Season}`,
           data
         }
-        return result
       })
 
       this.showChart = true
+    },
+    pushUrlParams(params) {
+      history.pushState({}, null, `${location.pathname}?${params.join('&')}`);
+    },
+    init() {
+      const search = window.location.search
+      if (!search) {
+        return
+      }
+      const params = new URLSearchParams(search)
+      if (params.has('id')) {
+        this.getSeries(params.get('id'))
+      }
     }
   },
+  created() {
+    this.init()
+  }
 }
 </script>
 
