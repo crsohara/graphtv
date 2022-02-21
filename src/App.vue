@@ -97,35 +97,25 @@ export default {
         return
       }
 
-      this.getSeasons(imdbID, this.series.totalSeasons)
+      this.loading = false
+      this.setChartDataFromRedis(this.series.seasons)
     },
-    async getSeasons(id, seasonCount) {
-      const seasonNumbers = [...Array(parseInt(seasonCount) + 1).keys()]
-      seasonNumbers.splice(0,1)
-      this.seasons = await Promise.all(seasonNumbers.map(season => {
-        return this.$query.getSeason(id, season)
-      })).then((results) => {
-        this.loading = false
-        return results
-      })
+    setChartDataFromRedis(data) {
 
-      this.setChartData(this.seasons)
-    },
-    setChartData(data) {
       this.chartData = data.map(item => {
-        if (!item.Episodes) {
+        if (!item.episodes) {
           return {}
         }
-        const data = item.Episodes.map(episode => {
+        const data = item.episodes.map(episode => {
           return {
-            name: this.formatPointName(item, episode),
-            label: this.formatPointLabel(episode),
-            y: parseFloat(episode.imdbRating),
-            id: episode.imdbID
+            name: `S${this.formatNumber(item.season)}E${this.formatNumber(episode.episode)}`,
+            label: `${episode.title}<br/><b>Rating</b>: ${episode.rating}<br/>`,
+            y: parseFloat(episode.rating),
+            id: episode.link.match(/tt\d+/)[0]
           }
         })
         return {
-          name: `Season ${item.Season}`,
+          name: `Season ${item.season}`,
           data
         }
       })

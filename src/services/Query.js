@@ -1,5 +1,6 @@
 class QueryService {
-  baseUrl = 'https://www.omdbapi.com/?apikey=d0d85a24&'
+  // baseUrl = 'https://www.omdbapi.com/?apikey=d0d85a24&'
+  baseUrl = 'http://localhost:3000/'
 
   constructor() {
   }
@@ -8,7 +9,17 @@ class QueryService {
     return `${this.baseUrl}${query}`;
   }
 
-  get(query) {
+  get(query, search = false) {
+    if (search) {
+      return fetch('https://www.omdbapi.com/?apikey=d0d85a24&' + query)
+        .then((response) => response.json())
+        .then(response => {
+          if (response.Error) {
+            console.error(`Error: query:${query} - ${response.Error}`)
+          }
+          return response
+        })
+    }
     return fetch(this.getUrl(query))
       .then((response) => response.json())
       .then(response => {
@@ -26,11 +37,14 @@ class QueryService {
       params.push(`y=${searchYear}`)
     }
 
-    return this.get(`type=series&${params.join('&')}`)
+    return this.get(`type=series&${params.join('&')}`, true)
   }
 
-  getSeries(id) {
-    return this.get(`i=${id}`)
+  getSeries(id, omdb = false) {
+    if (omdb) {
+      return this.get(`i=${id}`, omdb)
+    }
+    return this.get(`${id}`)
   }
 
   getSeason(id, season) {

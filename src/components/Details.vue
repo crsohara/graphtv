@@ -5,7 +5,7 @@
     </div>
     <div v-if="seriesIsSet">
       <h2>{{ series.Title }}</h2>
-      <div>{{ series.Year }} ({{ series.totalSeasons }} Seasons) </div>
+      <div>{{ series.Year }} ({{ series.seasonCount }} Seasons) </div>
       <div>{{ series.Plot }}</div>
       <div><strong>IMDB Rating:</strong> {{ series.imdbRating }}</div>
       <a

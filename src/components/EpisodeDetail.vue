@@ -15,7 +15,7 @@
           <strong>Title:</strong> {{ episode.Title }}
         </div>
         <div class="detail">
-          <strong>Rating:</strong> {{ episode.Ratings[0].Value }}
+          <strong>Rating:</strong> {{ episode.Ratings && episode.Ratings[0] && episode.Ratings[0].Value }}
         </div>
         <div class="detail">
           <strong>Season:</strong> {{ episode.Season}}
@@ -57,7 +57,7 @@ export default {
   methods: {
     async getEpisodeDetail(id) {
       this.isLoading = true
-      await this.$query.getSeries(id).then(response => {
+      await this.$query.getSeries(id, true).then(response => {
         this.isLoading = false
         this.episode = response
       })
