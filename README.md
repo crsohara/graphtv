@@ -1,5 +1,8 @@
 # graphtv2
 
+## build
+`docker build -t scrapetest .`
+
 ## Project setup
 ```
 npm install
