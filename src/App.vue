@@ -89,16 +89,17 @@ export default {
       this.episode = ''
       this.loading = true
       this.pushUrlParams([`id=${imdbID}`])
-      this.series = await this.$query.getSeries(imdbID)
+      this.series = await this.$query.getSeriesInfo(imdbID, true)
+      const seriesInfo = await this.$query.getSeries(imdbID)
 
-      if (this.series.totalSeasons === 'N/A') {
+      if (seriesInfo.totalSeasons === 'N/A') {
         this.loading = false
         this.chartData = []
         return
       }
 
       this.loading = false
-      this.setChartDataFromRedis(this.series.seasons)
+      this.setChartDataFromRedis(seriesInfo.seasons)
     },
     setChartDataFromRedis(data) {
 

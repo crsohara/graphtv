@@ -1,6 +1,6 @@
 class QueryService {
   // baseUrl = 'https://www.omdbapi.com/?apikey=d0d85a24&'
-  baseUrl = 'http://localhost:3000/'
+  baseUrl = 'http://127.0.0.1:3000/'
 
   constructor() {
   }
@@ -40,10 +40,11 @@ class QueryService {
     return this.get(`type=series&${params.join('&')}`, true)
   }
 
-  getSeries(id, omdb = false) {
-    if (omdb) {
-      return this.get(`i=${id}`, omdb)
-    }
+  getSeriesInfo(id) {
+    return this.get(`i=${id}`, true)
+  }
+
+  getSeries(id) {
     return this.get(`${id}`)
   }
 
